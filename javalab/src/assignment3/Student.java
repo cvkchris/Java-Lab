@@ -14,17 +14,15 @@ public class Student {
 		this.setDob(dob);
 		this.setMarks(marks);
 	}
-	
-	
-    // To String
-	
+
+	// To String
+
 	@Override
 	public String toString() {
 		return "PRN : " + prn + ", Name: " + name + ", Marks: " + marks + "]\n";
 	}
 
-	
-   // Constructors	
+	// Constructors
 	public Student(int prn, String name) {
 		this.prn = prn;
 		this.name = name;
@@ -36,8 +34,8 @@ public class Student {
 		this.marks = marks;
 	}
 
-   //Getter and Setters
-	
+	// Getter and Setters
+
 	public int getPrn() {
 		return prn;
 	}
