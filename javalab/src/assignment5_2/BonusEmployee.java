@@ -8,13 +8,16 @@ public class BonusEmployee extends Employee {
 	@Override
 	public double theMonthly() {
 		Scanner scan = new Scanner(System.in);
-		System.out.println("Enter Bonus (in percentage) : ");
-		double bonus_percent = scan.nextDouble(); 
+		System.out.print("Enter Bonus (in percentage) : ");
+		double bonus = scan.nextDouble(); 
 		
-		bonus_percent = bonus_percent / 100;
+		double bonus_percent = bonus / 100;
 		
 		setNetSalary(getGrossWage()+(getGrossWage()*bonus_percent));
-		
+		System.out.println("\n----------Bonus Employee------------");
+		System.out.println("Gross Salary          | "+getGrossWage());
+		System.out.println("Bonus                 | "+bonus+"%");
+		System.out.println("------------------------------------");
 		return getNetSalary();
 	}
 
