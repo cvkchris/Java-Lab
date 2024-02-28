@@ -1,41 +1,86 @@
 package assignment5_2;
 
-public class NormalEmployee extends Employee {
-	
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-	double paidDays, basicWage, epf, hra, esi, conveyanceAllowance, professionalTax, 
-	medicalAllowance, loanRecovery, otherAllowances, totalEarnings, totalDeductions, netSalary;
-	
-	public NormalEmployee(String name, String address, int basicSalary, int lOP, int workingDays) {
-		super(name, address, basicSalary, lOP, workingDays);
-		paidDays = workingDays - lOP;		
-		basicWage = (basicSalary/workingDays)*paidDays*(45*100);
-		if(basicWage>=15000)		
-			epf = 15000*(12/100);
+public class NormalEmployee extends Employee {
+
+	@Override
+	public double theMonthly() {
+		// Paid Days
+		setPaidDays(getWorkingDays() - getLOP());
+		
+		//Basic Wage 
+		setBasicWage((getGrossWage() / getWorkingDays()) * getPaidDays() * 0.45);
+		
+		//EPF
+		if (getBasicWage() >= 15000)
+			setEpf(15000 * 0.12);
 		else
-			epf = basicWage*(15/100);
+			setEpf(getBasicWage() * 0.15);
 		
-		hra = basicWage*0.4;
+		// HRA
+		setHra(getBasicWage() * 0.4);
 		
-		if(basicSalary<=21000)
-			esi = basicSalary*(0.75/100);
+		// Allowances
+		double conveyance = (1600.00 / getWorkingDays())*getPaidDays();
+		BigDecimal bd = new BigDecimal(conveyance).setScale(0, RoundingMode.HALF_UP);  
+		conveyance = bd.doubleValue();
+		setConveyanceAllowance(conveyance);
+		
+		double medical = (1250.00 / getWorkingDays()) * getPaidDays();
+		bd = new BigDecimal(medical).setScale(0, RoundingMode.HALF_UP); 
+		medical = bd.doubleValue();
+		setMedicalAllowance(medical);
+		
+		setOtherAllowances((getGrossWage() / getWorkingDays()) * getPaidDays()
+				- (getBasicWage() + getHra() + getConveyanceAllowance() + getMedicalAllowance()));
+		
+		// Total Earnings
+		double earnings = getBasicWage() + getHra() + getConveyanceAllowance() + getMedicalAllowance() + getOtherAllowances();
+		bd = new BigDecimal(earnings).setScale(0, RoundingMode.HALF_UP);
+		earnings = bd.doubleValue();
+		setTotalEarnings(earnings);
+
+		// Health Insurance
+		if (getGrossWage() <= 21000)
+			setHealthInsurance(getTotalEarnings() * 0.0075);
 		else
-			esi = 0;
+			setHealthInsurance(0);
+
+		// Professional Tax
+		setProfessionalTax(0);
 		
-		conveyanceAllowance = (1600/workingDays)*paidDays;
-		medicalAllowance = (1250/workingDays)*paidDays;
-		otherAllowances = (basicSalary/workingDays)*paidDays -(basicWage+hra+conveyanceAllowance+medicalAllowance);
+		// Loan Recovery
+		setLoanRecovery(0);
 		
-		totalEarnings = basicWage+hra+conveyanceAllowance+medicalAllowance+otherAllowances;
-		totalDeductions = epf+esi+professionalTax+loanRecovery;
+		double deductions = getEpf() + getHealthInsurance() + getProfessionalTax() + getLoanRecovery(); 
+		bd = new BigDecimal(deductions).setScale(0, RoundingMode.HALF_UP);
+		deductions = bd.doubleValue();
+		setTotalDeductions(deductions);
+
+		setNetSalary(getTotalEarnings() - getTotalDeductions());
 		
-		netSalary = totalEarnings-totalDeductions;
-				
+		System.out.println("\n-----------Earnings---------------");
+		System.out.println("Basic Wage            |"+getBasicWage());
+		System.out.println("HRA                   | "+getHra());
+		System.out.println("Converyance Allowance | "+getConveyanceAllowance());
+		System.out.println("Medical Allowance     | "+getMedicalAllowance());
+		System.out.println("Other Allowance       | "+getOtherAllowances());
+		System.out.println("\nTotal Earnings      | "+getTotalEarnings());	
 		
+		System.out.println("\n----------Deductions--------------");
+		System.out.println("EPF                   | "+getEpf());
+		System.out.println("Health Insurance      | "+getHealthInsurance());
+		System.out.println("Professional Tax      | "+getProfessionalTax());
+		System.out.println("Loan Recovery         | "+getLoanRecovery());
+		System.out.println("\nTotal Deductions    | "+getTotalDeductions());
+		System.out.println("------------------------------------");
+		
+		
+		
+		
+		return getNetSalary();
 	}
-	
-	
-	
-	
 
 }
